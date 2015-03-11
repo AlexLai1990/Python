@@ -1,0 +1,103 @@
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+	<body>
+		<h1 class='text-center'>{{restaurant.name}}</h1>
+		&nbsp
+		<div class="panel panel-default col-sm-8 col-sm-offset-2"> 
+			<!-- Table -->
+			<table class="table">
+				<th>Name</th><th>Description</th><th>Course</th><th>Price</th><th colspan = '2'>Operations</th>
+				
+				{% for i in items %}
+				<tr>
+				<td>{{i.name}}</td>
+				<td>{{i.description}}</td>
+				<td> {{i.course}} </td>
+				<td> {{i.price}} </td>
+				<td>
+					<a class='glyphicon glyphicon-edit' href='{{url_for("editMenuItem", restaurant_id = restaurant.id, menu_id = i.id) }}'>Edit</a>
+					&nbsp    
+					<a href="#" class="glyphicon glyphicon-erase" data-toggle="modal" data-target="#largeModal" data-id='{{i.id}}' data-rest="{{restaurant.name}}" data-menu="{{i.name}}">Delete</a>
+				</td>
+				</tr> 
+				{% endfor %} 
+				
+			</table> 
+		</div>
+		
+		<div class ='col-sm-offset-2 col-sm-2' >
+			{% with messages = get_flashed_messages() %}
+			{% if messages %}
+			<ul>
+				{% for message in messages %}
+					<li> <strong> {{message}}
+				{% endfor %}
+			</ul>
+			{% endif %}
+			{% endwith %} 
+		</div>
+			
+		&nbsp
+		<div class ='col-sm-offset-4 col-sm-4'>  
+			<a href = '{{url_for("newMenuItem", restaurant_id = restaurant.id) }}'>
+				<button type="submit" class="btn btn-default preview-add-button">
+					<span class="glyphicon glyphicon-plus"></span>Add Menu
+				</button>
+			</a> 
+			&nbsp;&nbsp;  
+			<a href = '{{url_for("getAllRestaurants") }}'>
+				<button type="submit" class="btn btn-default preview-add-button">
+					<span class="glyphicon glyphicon-arrow-left"></span>Back Main
+				</button>
+			</a>
+		</div>
+  
+		<div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+		  <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Delete Alert</h4>
+			  </div>
+			  <div class="modal-body">
+				<h2 id ='rest_name' >In Restaurant - 
+					<h3 id ='menu_name'>Do you really want to delete Menu: </h3>
+				</h2>
+			  </div>
+			  <div class="modal-footer" id='modal_footer'>
+				<button type="button" class="btn btn-default" data-dismiss="modal" >No</button>
+         		<a id='button_yes' href =''>
+					<button type="submit" class="btn btn-primary">Yes 
+					</button></a>			
+			  </div>
+			</div>
+		  </div>
+		</div>	
+		
+		<script>
+			$('#largeModal').on('show.bs.modal', function (event) {   
+				var button = $(event.relatedTarget) // Button that triggered the modal
+				var rest_info = button.data('rest')
+				var menu_info = button.data('menu')  
+				var modal = $(this)   
+				//var menu_id = button.data('id')
+				modal.find('.modal-body h2').text('  In Restaurant - ' +rest_info) 
+				// $('#rest_name').append("");
+				modal.find('.modal-body h3').text(' Do you really want to delete the Menu - ' + menu_info) 
+				var menu_id = button.data('id')  
+				$('#button_yes').attr('href', "/restaurants/{{restaurant.id}}/" + menu_id + '/delete')
+			})
+		</script> 
+		
+	</body> 
+</html>

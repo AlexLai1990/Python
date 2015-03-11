@@ -1,0 +1,61 @@
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<div>
+		<h1 class="text-center"> Restaurant - {{restaurant.name}} </h1>
+         <form class="panel-body form-horizontal payment-form" method="POST" action="{{url_for('editMenuItem', restaurant_id = restaurant.id, menu_id = menu.id)}}">
+		 <h3 class="text-center">Edit Menu</h3>
+             <div class="form-group">
+                 <label for="Name" class="col-sm-3 col-sm-offset-1 control-label">Name</label>
+                 <div class="col-sm-5">
+                     <input type="text" class="form-control" id="Name" name="Name" placeholder="{{menu.name}}">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label for="Description" class="col-sm-3 col-sm-offset-1 control-label">Description</label>
+                 <div class="col-sm-5">
+					<textarea class="form-control" rows="3" name = "Description" placeholder="{{menu.description}}"></textarea>
+				 </div>
+             </div> 
+             <div class="form-group">
+                 <label for="Course" class="col-sm-3  col-sm-offset-1 control-label">Course</label>
+                 <div class="col-sm-5">
+                     <input type="number" class="form-control" id="Course" name="Course" placeholder="{{menu.course}}">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label for="Price" class="col-sm-3  col-sm-offset-1 control-label">Price</label>
+                 <div class="col-sm-5">
+					<input type="number" class="form-control" id="Price" name="Price" placeholder="{{menu.price}}">
+                  </div> 
+             </div>  
+			 
+             <div class="form-group"> 	 
+                 <div class="col-sm-9 text-right">
+					
+					 <a href = '{{url_for("getMenus", restaurant_id = restaurant.id) }}'>
+						<button type="button" class="btn btn-default">
+							<span class="glyphicon glyphicon-arrow-left"></span>Back
+						</button>
+					 </a> 	
+				 
+                     <button type="submit" class="btn btn-default preview-add-button">
+                         <span class="glyphicon glyphicon-ok"></span> Submit
+                     </button>
+                 </div>
+             </div>
+         </form> 
+		 
+     </div>
+</body>
+</html>

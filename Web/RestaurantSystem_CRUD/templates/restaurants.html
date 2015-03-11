@@ -1,0 +1,159 @@
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+	<body>
+		<h1 class='text-center'>List of Restaurants</h1> 
+		
+		<div class="panel panel-default col-sm-6 col-sm-offset-3"> 
+			<!-- Table -->
+			<table class="table">
+				<th>
+					&nbsp  &nbsp  &nbsp  &nbsp    Name</th><th>
+					&nbsp  &nbsp  &nbsp  &nbsp   Operations</th>
+				
+				{% for i in restaurants %}
+				<tr>
+				<td>
+					&nbsp  &nbsp  &nbsp  &nbsp    
+					<a href = '{{url_for("getMenus", restaurant_id = i.id) }}'> {{i.name}}</a>
+					</td> 
+				<td>
+					&nbsp  &nbsp  &nbsp  &nbsp     
+					<a class='glyphicon glyphicon-edit' href=''  data-toggle="modal" data-target="#editRest" data-rest_name='{{i.name}}' data-rest_id='{{i.id}}'>Edit</a> 
+					<a class='glyphicon glyphicon-erase' href='' data-toggle="modal" data-target="#deleteRest" data-rest_name='{{i.name}}' data-rest_id='{{i.id}}'>Delete</a> 
+				</td>
+				</tr> 
+				{% endfor %} 
+				
+			</table> 
+		</div> 
+		
+		<div class ='col-sm-offset-3 col-sm-2' >
+			{% with messages = get_flashed_messages() %}
+			{% if messages %}
+			<ul>
+				{% for message in messages %}
+					<li> <strong> {{message}}
+				{% endfor %}
+			</ul>
+			{% endif %}
+			{% endwith %} 
+		</div>
+		
+		<div class ='col-sm-offset-2 col-sm-2'>  
+			&nbsp  &nbsp 
+			<button type="submit" class="btn btn-default preview-add-button" data-toggle="modal" data-target="#addMRest">
+				<span class="glyphicon glyphicon-plus"></span>Add Menu
+			</button>
+		</div>
+		 
+		<form method="POST" action="{{url_for('getAllRestaurants')}}"> 
+			<div class="modal fade" id="addMRest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="exampleModalLabel">Make a new Restaurant</h4>
+				  </div>
+				  <div class="modal-body">
+					<form>
+					  <div class="form-group">
+						<label for="recipient-name" class="control-label">Restaurant Name:</label>
+						<input type="text" class="form-control" id="recipient-name" name='Name'>
+					  </div>
+					  <div class="form-group">
+						<label for="message-text" class="control-label">Description:</label>
+						<textarea class="form-control" id="message-text" name='Description'></textarea>
+					  </div>
+					</form>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Create</button>
+				  </div>
+				</div>
+			  </div>
+			</div> 
+			
+		</form>
+		
+		<form method="POST" action="#" id='edit_form'>
+			<div class="modal fade" id="editRest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="exampleModalLabel">Edit Restaurant</h4>
+				  </div>
+				  <div class="modal-body">
+					<form>
+					  <div class="form-group">
+						<label for="recipient-name" class="control-label">Restaurant Name:</label>
+						<input id='editChangeName' type="text" class="form-control" id="recipient-name" name='Name' placeholder=''>
+					  </div>
+					  <div class="form-group">
+						<label for="message-text" class="control-label">Description:</label>
+						<textarea class="form-control" id="message-text" name='Description' placeholder='Fake, not implemented yet'></textarea>
+					  </div>
+					</form>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Edit</button>
+				  </div>
+				</div>
+			  </div>
+			</div> 
+		</form>
+		
+		<script>
+			$('#editRest').on('show.bs.modal', function (event) {   
+				var button = $(event.relatedTarget) // Button that triggered the modal
+				var rest_name = button.data('rest_name') 
+				var rest_id = button.data('rest_id')
+				var modal = $(this)    
+				$('#editChangeName').attr('placeholder', rest_name)
+				$('#edit_form').attr('action', "/restaurants/" + rest_id + '/edit') 
+			})
+		</script> 
+		
+		<div class="modal fade" id="deleteRest" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+		  <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Delete Alert</h4>
+			  </div>
+			  <div class="modal-body"> 
+				<h2 id ='rest_name'>Do you really want to delete Restaurant: </h2> 
+			  <div class="modal-footer" id='modal_footer'>
+				<button type="button" class="btn btn-default" data-dismiss="modal" >No</button>
+         		<a id='delete_yes' href =''>
+					<button type="submit" class="btn btn-primary">Yes</button>
+				</a>			
+			  </div>
+			</div>
+		  </div>
+		</div>	
+		
+		<script>
+			$('#deleteRest').on('show.bs.modal', function (event) {   
+				var button = $(event.relatedTarget) // Button that triggered the modal
+				var m_rest_name = button.data('rest_name') 
+				var m_rest_id = button.data('rest_id')
+				var modal = $(this)    
+				modal.find('.modal-body h2').text('Do you really want to delete Restaurant: ' +  m_rest_name)
+				$('#delete_yes').attr('href', "/restaurants/" + m_rest_id + '/delete') 
+			})
+		</script> 
+	</body> 
+</html>
